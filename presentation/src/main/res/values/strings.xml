@@ -1,0 +1,21 @@
+<resources>
+    <string name="tasks_title">Задачи</string>
+    <string name="add_task">Добавить</string>
+    <string name="back">Назад</string>
+    <string name="edit">Редактировать</string>
+    <string name="save">Сохранить</string>
+    <string name="remove">Удалить вложение</string>
+    <string name="title_new">Новая задача</string>
+    <string name="title_edit">Редактирование</string>
+    <string name="title_view">Задача</string>
+    <string name="text_hint">Текст задачи</string>
+    <string name="attach_file">Прикрепить файл</string>
+    <string name="attach_cat">Прикрепить котика</string>
+    <string name="files_count">Файлов: %1$d из %2$d</string>
+    <string name="attachments_count">Вложений: %1$d</string>
+    <string name="empty_list">Задач пока нет.\nНажмите «+», чтобы добавить.</string>
+    <string name="empty_text">(без текста)</string>
+    <string name="err_file">Не удалось прикрепить файл</string>
+    <string name="err_cat">Не удалось загрузить котика. Проверьте сеть и ключ API</string>
+    <string name="err_not_found">Задача не найдена</string>
+</resources>
