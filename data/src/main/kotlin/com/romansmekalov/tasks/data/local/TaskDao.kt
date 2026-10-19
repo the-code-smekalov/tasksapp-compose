@@ -1,6 +1,7 @@
 package com.romansmekalov.tasks.data.local
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
@@ -15,4 +16,7 @@ interface TaskDao {
 
     @Upsert
     suspend fun upsert(entity: TaskEntity): Long
+
+    @Query("DELETE FROM tasks WHERE id = :id")
+    suspend fun delete(id: Long)
 }

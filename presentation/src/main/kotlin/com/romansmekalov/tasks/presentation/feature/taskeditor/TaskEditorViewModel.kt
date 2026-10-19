@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.romansmekalov.tasks.domain.model.MAX_ATTACHMENTS
 import com.romansmekalov.tasks.domain.model.Task
+import com.romansmekalov.tasks.domain.model.TaskStatus
 import com.romansmekalov.tasks.domain.usecase.attachment.AttachCatUseCase
 import com.romansmekalov.tasks.domain.usecase.attachment.DeleteAttachmentsUseCase
 import com.romansmekalov.tasks.domain.usecase.attachment.ImportAttachmentUseCase
+import com.romansmekalov.tasks.domain.usecase.task.DeleteTaskUseCase
 import com.romansmekalov.tasks.domain.usecase.task.GetTaskUseCase
 import com.romansmekalov.tasks.domain.usecase.task.SaveTaskUseCase
 import com.romansmekalov.tasks.presentation.R
@@ -28,6 +30,7 @@ class TaskEditorViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getTask: GetTaskUseCase,
     private val saveTask: SaveTaskUseCase,
+    private val deleteTask: DeleteTaskUseCase,
     private val importAttachment: ImportAttachmentUseCase,
     private val attachCat: AttachCatUseCase,
     private val deleteAttachments: DeleteAttachmentsUseCase,
@@ -59,8 +62,11 @@ class TaskEditorViewModel @Inject constructor(
             is EditorIntent.RemoveAttachment -> removeAttachment(intent.path)
             EditorIntent.AttachCat -> addCat()
             EditorIntent.EnterEdit -> _state.update { it.copy(isEditing = true) }
-            EditorIntent.Save -> save()
+            EditorIntent.PressSave -> save()
             EditorIntent.PressBack -> viewModelScope.launch { _effects.send(EditorEffect.Back) }
+            EditorIntent.PressComplete -> complete()
+            EditorIntent.ToggleActionMenu -> _state.update { it.copy(menuExpanded = !it.menuExpanded) }
+            EditorIntent.PressDelete -> delete()
         }
     }
 
@@ -76,7 +82,8 @@ class TaskEditorViewModel @Inject constructor(
             it.copy(
                 text = task.text,
                 attachments = task.attachments,
-                isLoading = false
+                isLoading = false,
+                status = task.status,
             )
         }
     }
@@ -113,6 +120,7 @@ class TaskEditorViewModel @Inject constructor(
     }
 
     private fun save() {
+        _state.update { it.copy(saveInProcess = true) }
         val s = _state.value
         if (!s.canSave) return
         viewModelScope.launch {
@@ -121,12 +129,32 @@ class TaskEditorViewModel @Inject constructor(
                     id = if (isNew) 0 else taskId,
                     text = s.text.trim(),
                     attachments = s.attachments,
-                    createdAt = original?.createdAt ?: System.currentTimeMillis()
+                    createdAt = original?.createdAt ?: System.currentTimeMillis(),
+                    status = if (isNew) TaskStatus.Active else s.status,
                 )
             )
             deleteAttachments(removedPaths)
             saved = true
+            _state.update { it.copy(saveInProcess = false) }
             _effects.send(EditorEffect.Saved)
+        }
+    }
+
+    private fun complete() {
+        viewModelScope.launch {
+            original?.let {
+                saveTask(it.copy(status = TaskStatus.Completed))
+                _effects.send(EditorEffect.Saved)
+            }
+        }
+    }
+
+    private fun delete() {
+        viewModelScope.launch {
+            original?.let {
+                deleteTask(it.id)
+                _effects.send(EditorEffect.Back)
+            }
         }
     }
 

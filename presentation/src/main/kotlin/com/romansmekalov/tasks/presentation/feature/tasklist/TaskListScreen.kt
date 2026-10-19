@@ -1,5 +1,6 @@
 package com.romansmekalov.tasks.presentation.feature.tasklist
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,13 +28,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.romansmekalov.tasks.domain.model.Task
+import com.romansmekalov.tasks.domain.model.TaskStatus
 import com.romansmekalov.tasks.presentation.R
 import com.romansmekalov.tasks.presentation.navigation.LocalNavHost
 import com.romansmekalov.tasks.presentation.navigation.Routes
@@ -68,12 +72,12 @@ fun TaskListScreen(viewModel: TaskListViewModel = hiltViewModel()) {
                 }
             )
         },
-    ) { padding ->
+    ) { innerPadding ->
         if (!state.isLoading && state.tasks.isEmpty()) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
+                    .padding(innerPadding)
+                    .fillMaxSize(),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -86,8 +90,8 @@ fun TaskListScreen(viewModel: TaskListViewModel = hiltViewModel()) {
             LazyColumn(
                 state = listState,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
+                    .padding(innerPadding)
+                    .fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -105,6 +109,20 @@ fun TaskListScreen(viewModel: TaskListViewModel = hiltViewModel()) {
 @Composable
 private fun TaskCard(task: Task, onClick: () -> Unit) {
     Card(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(5.dp)
+                .then(
+                    Modifier.background(
+                        when (task.status) {
+                            TaskStatus.Completed -> Color.Green
+                            TaskStatus.Active -> Color.Blue
+                            else -> Color.Red
+                        }
+                    )
+                )
+        )
         Column(Modifier.padding(16.dp)) {
             Text(
                 text = task.text.ifBlank { stringResource(R.string.empty_text) },
@@ -123,3 +141,13 @@ private fun TaskCard(task: Task, onClick: () -> Unit) {
         }
     }
 }
+
+@Preview
+@Composable
+private fun TaskCardPreview() = TaskCard(
+    Task(
+        id = 1L,
+        text = "My text",
+        status = TaskStatus.Active
+    )
+) { }

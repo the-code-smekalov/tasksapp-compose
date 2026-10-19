@@ -15,13 +15,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -40,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.romansmekalov.tasks.domain.model.MAX_ATTACHMENTS
+import com.romansmekalov.tasks.domain.model.TaskStatus
 import com.romansmekalov.tasks.presentation.R
 import com.romansmekalov.tasks.presentation.components.AttachmentPreview
 import com.romansmekalov.tasks.presentation.navigation.LocalNavHost
@@ -88,7 +95,7 @@ fun TaskEditorScreen(viewModel: TaskEditorViewModel = hiltViewModel()) {
                 actions = {
                     if (state.isEditing) {
                         IconButton(
-                            onClick = { viewModel.onIntent(EditorIntent.Save) },
+                            onClick = { viewModel.onIntent(EditorIntent.PressSave) },
                             enabled = state.canSave,
                         ) {
                             Icon(
@@ -101,6 +108,48 @@ fun TaskEditorScreen(viewModel: TaskEditorViewModel = hiltViewModel()) {
                             Icon(
                                 Icons.Default.Edit,
                                 contentDescription = stringResource(R.string.edit),
+                            )
+                        }
+                    }
+                    if (!state.isNew) {
+                        IconButton(onClick = { viewModel.onIntent(EditorIntent.ToggleActionMenu) }) {
+                            Icon(
+                                Icons.Default.MoreVert,
+                                contentDescription = stringResource(R.string.more),
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = state.menuExpanded,
+                            onDismissRequest = { viewModel.onIntent(EditorIntent.ToggleActionMenu) },
+                        ) {
+
+                            if (state.status == TaskStatus.Active) {
+                                DropdownMenuItem(
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Default.CheckCircle,
+                                            contentDescription = stringResource(R.string.complete),
+                                        )
+                                    },
+                                    text = { Text(stringResource(R.string.complete)) },
+                                    onClick = {
+                                        viewModel.onIntent(EditorIntent.PressComplete)
+                                    },
+                                )
+                            }
+                            DropdownMenuItem(
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Delete,
+                                        contentDescription = stringResource(R.string.delete),
+                                    )
+                                },
+                                text = { Text(stringResource(R.string.delete)) },
+                                colors = MenuDefaults.itemColors()
+                                    .copy(leadingIconColor = MaterialTheme.colorScheme.error),
+                                onClick = {
+                                    viewModel.onIntent(EditorIntent.PressDelete)
+                                },
                             )
                         }
                     }

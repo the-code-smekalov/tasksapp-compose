@@ -7,4 +7,5 @@ data class Task(
     val text: String,
     val attachments: List<String> = emptyList(),
     val createdAt: Long = System.currentTimeMillis(),
+    val status: TaskStatus,
 )

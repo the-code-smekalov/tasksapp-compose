@@ -20,4 +20,6 @@ class RoomTaskRepository @Inject constructor(private val dao: TaskDao) : TaskRep
         val rowId = dao.upsert(task.toEntity())
         return if (task.id == 0L) rowId else task.id
     }
+
+    override suspend fun deleteTask(id: Long) = dao.delete(id)
 }

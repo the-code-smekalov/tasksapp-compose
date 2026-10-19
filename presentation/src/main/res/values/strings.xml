@@ -5,6 +5,9 @@
     <string name="edit">Редактировать</string>
     <string name="save">Сохранить</string>
     <string name="remove">Удалить вложение</string>
+    <string name="complete">Завершить</string>
+    <string name="delete">Удалить</string>
+    <string name="more">Ещё</string>
     <string name="title_new">Новая задача</string>
     <string name="title_edit">Редактирование</string>
     <string name="title_view">Задача</string>
