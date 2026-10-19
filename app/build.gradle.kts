@@ -1,13 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.kotlin.compose)
 }
 android {
     namespace = "com.romansmekalov.tasks"
-    compileSdk = 34
+    compileSdk = 37
     defaultConfig {
         applicationId = "com.romansmekalov.tasks"
         minSdk = 24
@@ -19,7 +19,6 @@ android {
         release { isMinifyEnabled = false }
     }
     buildFeatures { compose = true }
-    composeOptions { kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get() }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
