@@ -4,11 +4,12 @@ import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.core.net.toUri
+import com.romansmekalov.tasks.data.di.IODispatcher
 import com.romansmekalov.tasks.data.remote.CatApi
 import com.romansmekalov.tasks.data.remote.InternalApi
 import com.romansmekalov.tasks.domain.repository.AttachmentRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.UUID
@@ -18,12 +19,13 @@ class AttachmentRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val catApi: CatApi,
     private val internalApi: InternalApi,
+    @IODispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : AttachmentRepository {
 
     private val dir: File
         get() = File(context.filesDir, "attachments").apply { mkdirs() }
 
-    override suspend fun importFromUri(uri: String): Result<String> = withContext(Dispatchers.IO) {
+    override suspend fun importFromUri(uri: String): Result<String> = withContext(ioDispatcher) {
         runCatching {
             val source = uri.toUri()
             val name = queryDisplayName(source) ?: "file"
@@ -39,7 +41,7 @@ class AttachmentRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun downloadRandomCat(): Result<String> = withContext(Dispatchers.IO) {
+    override suspend fun downloadRandomCat(): Result<String> = withContext(ioDispatcher) {
         runCatching {
             val image = catApi.randomImage().first()
             val ext = image.url.substringAfterLast('.', "jpg").take(4)
@@ -55,9 +57,13 @@ class AttachmentRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun delete(paths: List<String>) {
-        paths.forEach { runCatching { File(it).delete() } }
-    }
+    override suspend fun delete(paths: List<String>): Result<Boolean> =
+        withContext(ioDispatcher) {
+            runCatching {
+                paths.forEach { File(it).delete() }
+                true
+            }
+        }
 
     private fun queryDisplayName(uri: Uri): String? =
         context.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)

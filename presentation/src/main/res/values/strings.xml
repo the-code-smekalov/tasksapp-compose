@@ -1,5 +1,5 @@
 <resources>
-    <string name="tasks_title">Задачи</string>
+    <string name="tasks_title">Задачки</string>
     <string name="add_task">Добавить</string>
     <string name="back">Назад</string>
     <string name="edit">Редактировать</string>
@@ -8,17 +8,19 @@
     <string name="complete">Завершить</string>
     <string name="delete">Удалить</string>
     <string name="more">Ещё</string>
-    <string name="title_new">Новая задача</string>
+    <string name="title_new">Новая задачка</string>
     <string name="title_edit">Редактирование</string>
-    <string name="title_view">Задача</string>
-    <string name="text_hint">Текст задачи</string>
+    <string name="title_view">Задачка</string>
+    <string name="text_hint">Текст задачки</string>
     <string name="attach_file">Прикрепить файл</string>
-    <string name="attach_cat">Прикрепить котика</string>
+    <string name="attach_cat">Прикрепить кота</string>
     <string name="files_count">Файлов: %1$d из %2$d</string>
     <string name="attachments_count">Вложений: %1$d</string>
-    <string name="empty_list">Задач пока нет.\nНажмите «+», чтобы добавить.</string>
+    <string name="empty_list">Задачек пока нет.\nНажмите «+», чтобы добавить.</string>
     <string name="empty_text">(без текста)</string>
     <string name="err_file">Не удалось прикрепить файл</string>
     <string name="err_cat">Не удалось загрузить котика. Проверьте сеть и ключ API</string>
-    <string name="err_not_found">Задача не найдена</string>
+    <string name="err_not_found">Задачка не найдена</string>
+    <string name="err_load_task_list">Не смогли загрузить задачки…\nУже работаем над исправлением</string>
+    <string name="err_save">Не смогли сохранить задачку…\nПопробуйте повторить позже</string>
 </resources>

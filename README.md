@@ -1,16 +1,24 @@
 # Задачки
 
-Простое Android-приложение для заметок-задач с вложениями (файлы, картинки, случайные котики из [TheCatAPI](https://thecatapi.com/)).
+Android-приложение для заметок-задач с вложениями (файлы, картинки, случайные котики из [TheCatAPI](https://thecatapi.com/)).
 
 ## Возможности
-- Список задач (Room), переход к просмотру/редактированию по клику, сохранение прокрутки при возврате.
-- Добавление задачи: текст (мин. 5 строк), до 5 вложений с превью, кнопка «Прикрепить котика».
-- Редактирование: «Редактировать» и «Сохранить» в TopAppBar.
-- Файлы копируются в `filesDir/attachments` (удаляются вместе с приложением).
-- Material 3, светлая/тёмная тема по системе (Dynamic Color на Android 12+).
+- Просмотр списка задач, переход к просмотру/редактированию по клику на задачу.
+- Добавление задачи: текст, до 5 вложений с превью(картинки, файлы), кнопка «Прикрепить кота» (запрашивает произвольную картинку с TheCatApi и прикрепляет её к задаче).
+- Задачи разделены по цветам - синие - активные, зеленые - завершенные
+- Редактирование: изменение текста и состава прикрепленных файлов.
+- В просмотре задачи в рамках меню доступно завершение или удаление задачи.
+- UI на Material 3, светлая/тёмная тема.
 
 ## Стек
-Kotlin · Jetpack Compose · MVI (+Clean Architecture) · Room · Retrofit/OkHttp · Hilt · Compose Navigation · Coil · Secrets Gradle Plugin. minSdk 24, targetSdk 34.
+- Kotlin + Coroutines 
+- Clean Architecture + MVVM + MVI
+- Jetpack Compose + Compose Navigation
+- Room
+- Retrofit/OkHttp
+- Hilt
+- Coil
+- Secrets Gradle Plugin
 
 ## Структура
 | Модуль | Содержимое |
@@ -21,9 +29,9 @@ Kotlin · Jetpack Compose · MVI (+Clean Architecture) · Room · Retrofit/OkHtt
 | `:app` | `Application`, `MainActivity`, манифест |
 
 ## Запуск
-1. Получите ключ на https://thecatapi.com/signup (работает и без ключа, но с лимитами).
+1. Получите ключ на https://thecatapi.com/signup (может потребоваться средство для доступа к заблокированным сайтам).
 2. Добавьте в `local.properties` (файл в `.gitignore`):
    ```
    CAT_API_KEY=ваш_ключ
    ```
-3. Откройте проект в Android Studio (Koala+, JDK 17), дождитесь Gradle Sync, запустите `app`.
+3. Откройте проект в Android Studio (JDK 17), дождитесь Gradle Sync, запустите `app`.

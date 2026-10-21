@@ -4,5 +4,5 @@ import com.romansmekalov.tasks.domain.repository.AttachmentRepository
 import javax.inject.Inject
 
 class DeleteAttachmentsUseCase @Inject constructor(private val repository: AttachmentRepository) {
-    operator fun invoke(paths: List<String>) = repository.delete(paths)
+    suspend operator fun invoke(paths: List<String>): Result<Boolean> = repository.delete(paths)
 }
